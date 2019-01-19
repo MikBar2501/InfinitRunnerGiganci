@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 
-	void PlayerDeath() {
+	public void PlayerDeath() {
 		GameManager.instance.GameOver();
 		collider.enabled = false;
 		rb.AddForce(new Vector2(0f,200f));
@@ -57,10 +57,16 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		if(other.CompareTag("Obstacle")) {
+		if(other.CompareTag("Obstacle") && !GameManager.instance.isImmortal) {
 			PlayerDeath();
 		} 	else if (other.CompareTag("Coin")) {
 			GameManager.instance.CoinCollected();
+			Destroy(other.gameObject);
+		}	else if (other.CompareTag("Immortality")) {
+			GameManager.instance.ImmortalityCollected();
+			Destroy(other.gameObject);
+		}	else if (other.CompareTag("Magnet")) {
+			GameManager.instance.MagnetCollected();
 			Destroy(other.gameObject);
 		}
 	}

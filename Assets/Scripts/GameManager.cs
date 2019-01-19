@@ -15,13 +15,48 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject obstacle;
 
-	public float obstacleSpawnRate;
-	public float maxObstacleSpawnHeight, minObstacleSpawnHeight;
-	public float obstacleSpawnPositionX;
+	//public float obstacleSpawnRate;
+	//public float maxObstacleSpawnHeight, minObstacleSpawnHeight;
+	//public float obstacleSpawnPositionX;
 	public bool inGame;
 	public GameObject resetButton;
 	private int coins;
 	public Text coinsText;
+
+	public bool isImmortal;
+	public float immortalityTime;
+	public float immortalitySpeedBoost;
+
+	public bool magnetActive;
+	public float magnetSpeed;
+	public float magnetDistance;
+	public float magnetTime;
+
+	public void MagnetCollected() {
+		if(magnetActive) {CancelInvoke("CancelMagnet");}
+
+		magnetActive = true;
+		Invoke("CancelMagnet", immortalityTime);
+	}
+
+	private void CancelMagnet() {
+		magnetActive = false;
+		
+	}
+
+	public void ImmortalityCollected() {
+		if(isImmortal) {CancelInvoke("CancelImmortality");}
+
+		isImmortal = true;
+		worldScrollingSpeed += immortalitySpeedBoost;
+		Invoke("CancelImmortality", immortalityTime);
+	}
+
+	private void CancelImmortality() {
+		worldScrollingSpeed -= immortalitySpeedBoost;
+		isImmortal = false;
+		
+	}
 		
 
 	// Use this for initialization
@@ -52,14 +87,14 @@ public class GameManager : MonoBehaviour {
 		coinsText.text = coins.ToString();
 	}
 
-	void SpawnObstacle() {
+	/*void SpawnObstacle() {
 		var spawnPosition = new Vector3(obstacleSpawnPositionX, Random.Range(minObstacleSpawnHeight, maxObstacleSpawnHeight), 0f);
 		Instantiate(obstacle, spawnPosition, Quaternion.identity);
-	}
+	}*/
 
 	void InitializeGame() {
 		inGame = true;
-		InvokeRepeating("SpawnObstacle", obstacleSpawnRate, obstacleSpawnRate);
+		//InvokeRepeating("SpawnObstacle", obstacleSpawnRate, obstacleSpawnRate);
 		resetButton.SetActive(false);
 	}
 
@@ -76,6 +111,7 @@ public class GameManager : MonoBehaviour {
 	public void CoinCollected(int value = 1) {
 		coins += value;
 		PlayerPrefs.SetInt("Coins", coins);
+		PlayerPrefs.SetInt("HighscoreValue", (int)score);
 		UpdateScreenScore();
 	}
 
