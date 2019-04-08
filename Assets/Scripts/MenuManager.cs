@@ -38,6 +38,7 @@ public class MenuManager : MonoBehaviour {
 	public void PlayButton()
 	{
 		SceneManager.LoadScene("MainScene");
+		SoundManager.instance.PlayOnceClick();
 	}
 
 	public void SoundButton() {
@@ -47,5 +48,6 @@ public class MenuManager : MonoBehaviour {
 		} else {
 			soundText.text = "Turn Off Sound";
 		}
+		SoundManager.instance.PlayOnceClick();
 	}
 }
